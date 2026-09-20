@@ -2,6 +2,8 @@
 
 ### Features
 
+* Reproducible Python dependencies: every Python benchmark ships a `pyproject.toml` and a `uv.lock`. SeBS exports the lockfile into a hash-pinned `requirements.txt` for the selected deployment, and build images install it with `pip --require-hashes`. The deployment SDK packages from `module_packages` in `configs/systems.json` are locked together with each benchmark's dependencies. Python 3.7-3.9 requirements files were removed.
+
 ### Bug Fixes
 
 * Pull the MinIO image from quay.io, as it is no longer published on Docker Hub.
