@@ -343,7 +343,7 @@ class minio_storage:
         logging.info('ACCESS_KEY={}'.format(self.access_key))
         logging.info('SECRET_KEY={}'.format(self.secret_key))
         self.storage_container = self.docker_client.containers.run(
-            'minio/minio',
+            'quay.io/minio/minio',
             command='server /data',
             ports={str(self.port): self.port},
             environment={

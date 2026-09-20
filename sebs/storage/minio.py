@@ -164,7 +164,7 @@ class Minio(PersistentStorage):
             self.logging.info(f"Starting storage Minio on port {self._cfg.mapped_port}")
             # Run the MinIO container
             self._storage_container = self._docker_client.containers.run(
-                f"minio/minio:{self._cfg.version}",
+                f"quay.io/minio/minio:{self._cfg.version}",
                 command="server /data",
                 network_mode="bridge",
                 user=os.getuid(),

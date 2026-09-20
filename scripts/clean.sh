@@ -17,7 +17,7 @@ for name in "nodejs.13.6" "python.3.6"; do
   fi
 done
 echo "Stopping minio storage containers..."
-active_containers=$(docker ps --filter ancestor=minio/minio -q)
+active_containers=$(docker ps --filter ancestor=quay.io/minio/minio -q)
 if [[ -n "${active_containers}" ]]; then
   docker stop -t0 ${active_containers} > /dev/null
 fi

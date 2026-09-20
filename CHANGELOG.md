@@ -4,6 +4,8 @@
 
 ### Bug Fixes
 
+* Pull the MinIO image from quay.io, as it is no longer published on Docker Hub.
+
 * Change to input of 120.uploader benchmark to conform with new Wikipedia policies (#308)
 
 ### Improvements
