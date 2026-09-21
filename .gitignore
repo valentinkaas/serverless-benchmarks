@@ -192,3 +192,7 @@ cache
 .vscode/
 # MacOS Finder
 **/.DS_Store
+
+# local storage configuration with generated credentials
+configs/local_deployment.json
+out_storage.json
