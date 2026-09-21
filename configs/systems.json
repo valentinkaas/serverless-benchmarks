@@ -37,8 +37,10 @@
             "storage.py",
             "nosql.py"
           ],
-          "packages": [],
           "module_packages": {
+            "storage": [
+              "minio>=7,<8"
+            ],
             "nosql": [
               "boto3==1.28.3"
             ]
@@ -107,7 +109,6 @@
             "nosql.py",
             "setup.py"
           ],
-          "packages": [],
           "module_packages": {}
         }
       },
@@ -217,7 +218,6 @@
             "storage.py",
             "nosql.py"
           ],
-          "packages": [],
           "module_packages": {
             "storage": [
               "azure-storage-blob"
@@ -308,7 +308,6 @@
             "nosql.py",
             "setup.py"
           ],
-          "packages": [],
           "module_packages": {
             "storage": [
               "google-cloud-storage==3.10.1"
@@ -403,11 +402,10 @@
             "setup.py",
             "nosql.py"
           ],
-          "packages": [],
           "module_packages": {
-            "storage": {
-              "minio": "^5.0.10"
-            },
+            "storage": [
+              "minio>=7,<8"
+            ],
             "nosql": [
               "boto3==1.28.3"
             ]

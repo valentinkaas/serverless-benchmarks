@@ -84,23 +84,6 @@ class SeBSConfig:
             "packages"
         ]
 
-    def deployment_module_packages(
-        self, deployment_name: str, language_name: str
-    ) -> Dict[str, str]:
-        """Get deployment module packages for a specific deployment and language, e.g.,
-        packages specific to object or NoSQL storage.
-
-        Args:
-            deployment_name (str): Name of the deployment platform (e.g., 'aws', 'azure').
-            language_name (str): Programming language name (e.g., 'python', 'nodejs').
-
-        Returns:
-            Dict[str, str]: Dictionary mapping module package names to their versions.
-        """
-        return self._system_config[deployment_name]["languages"][language_name]["deployment"][
-            "module_packages"
-        ]
-
     def deployment_files(self, deployment_name: str, language_name: str) -> List[str]:
         """Get deployment files list for a specific deployment and language.
 

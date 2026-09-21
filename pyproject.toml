@@ -39,6 +39,7 @@ dependencies = [
     "pycurl>=7.43",
     "click>=7.1.2",
     "rich",
+    "uv",
 
     # Storage & Local
     "minio==5.0.10",
