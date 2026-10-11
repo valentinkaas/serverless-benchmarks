@@ -26,6 +26,7 @@ from sebs.regression import regression_suite
 from sebs.utils import get_project_root, update_nested_dict, append_nested_dict, catch_interrupt
 from sebs.faas import System as FaaSSystem
 from sebs.faas.function import Trigger
+from sebs.manifest import write_manifest
 from sebs.statistics import print_stats
 
 deployment_client: Optional[FaaSSystem] = None
@@ -372,6 +373,10 @@ def invoke(
     with open(result_file, "w") as out_f:
         out_f.write(sebs.utils.serialize(result))
     sebs_client.logging.info("Save results to {}".format(os.path.abspath(result_file)))
+    manifest_file = write_manifest(
+        output_dir, sebs_client, deployment_client, experiment_config, experiment=None
+    )
+    sebs_client.logging.info("Save manifest to {}".format(os.path.abspath(manifest_file)))
 
 
 @benchmark.command()
@@ -787,6 +792,10 @@ def experiment_invoke(experiment, **kwargs):
     experiment = sebs_client.get_experiment(experiment, config["experiments"])
     experiment.prepare(sebs_client, deployment_client)
     experiment.run()
+    manifest_file = write_manifest(
+        output_dir, sebs_client, deployment_client, experiment.config, experiment.name()
+    )
+    sebs_client.logging.info("Save manifest to {}".format(os.path.abspath(manifest_file)))
 
 
 @experiment.command("process")

@@ -1,7 +1,8 @@
 const http = require('http'),
       strftime = require('strftime'),
       express = require('express'),
-      f = require('/function/function/function');
+      f = require('/function/function/function'),
+      environment = require('/function/function/environment');
 //import { v4 as uuidv4 } from 'uuid';
 const { v4: uuidv4 } = require('uuid');
 
@@ -30,7 +31,8 @@ app.post('/', function (req, res) {
       is_cold: false,
       result: {
         output: func_res
-      }
+      },
+      environment: environment.collect()
     }));
   },
   (reason) => {

@@ -17,7 +17,7 @@ def alive():
 @route('/', method='POST')
 def process_request():
     begin = datetime.datetime.now()
-    from function import function
+    from function import function, environment
     end = datetime.datetime.now()
     # FIXME: measurements?
     ret = function.handler(request.json)
@@ -29,7 +29,8 @@ def process_request():
         "is_cold": False,
         "result": {
             "output": ret
-        }
+        },
+        "environment": environment.collect()
     }
 
 sys.path.append(os.path.join(CODE_LOCATION))

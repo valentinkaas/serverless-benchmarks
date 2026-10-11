@@ -40,6 +40,28 @@ The results will be stored in `experiment.json`.
 To configure your benchmark, change settings in the config file or use command-line options.
 The full list is available by running `sebs benchmark invoke --help`.
 
+#### Reproducibility Manifest
+
+Every `benchmark invoke` and `experiment invoke` also writes `manifest.json` to the output directory.
+It records the SeBS git revision (with a dirty flag and a hash of uncommitted changes),
+the `benchmarks-data` revision, SeBS versions, the host, the experiment configuration,
+and, for each benchmark, the SHA-256 digest of its source files (also used as the cache key),
+the generated inputs, and its build provenance: the digest of the built artifact,
+the builder image with its digests, and the resolved dependencies. Build provenance is stored in the cache next to the code
+package, so runs that reuse a cached package report the same provenance.
+For each function, the manifest includes the provider's view of the deployment where supported
+(AWS: runtime, architecture, memory, layers, and code digest, which is compared against
+the built artifact in `deployed_artifact_matches`).
+
+Collection is passive and best-effort: values that could not be collected are `null`, and
+the reason is listed in an `unavailable` map. Values that do not apply are `null` without a reason. See [manifest.md](manifest.md) for all fields and an example.
+
+On AWS and local deployments with Python and Node.js, each invocation's output additionally
+contains an `environment` record collected inside the function: a fingerprint and the kernel
+boot id on every invocation, and the full static record (runtime, OS, CPU, cgroup limits,
+virtualization hints, allowlisted environment variables, installed packages) whenever
+a new sandbox is detected. The local deployment requires rebuilding its run images to include it.
+
 ### Process
 
 To download cloud metrics and process the invocations, run:
