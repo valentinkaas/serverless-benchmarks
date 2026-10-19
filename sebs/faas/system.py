@@ -25,6 +25,7 @@ from sebs.faas.container import DockerContainer
 from sebs.faas.resources import SystemResources
 from sebs.faas.config import Resources
 from sebs.faas.function import Function, Trigger, ExecutionResult
+from sebs.manifest import ProviderDescription
 from sebs.utils import LoggingBase
 from sebs.sebs_types import Language
 from .config import Config
@@ -79,6 +80,32 @@ class System(ABC, LoggingBase):
         # Initialize with random value to help with cold start detection/forcing
         self._cold_start_counter = randrange(100)
         self._system_resources = system_resources
+        self._used_functions: Dict[str, Tuple[Benchmark, Function]] = {}
+
+    @property
+    def used_functions(self) -> List[Tuple[Benchmark, Function]]:
+        """
+        Functions returned by `get_function` during this session, with their benchmarks.
+
+        Returns:
+            List of (benchmark, function) pairs, one per function name.
+        """
+        return list(self._used_functions.values())
+
+    def describe_function(self, function: Function) -> ProviderDescription:
+        """
+        Read the provider's view of a deployed function for the reproducibility manifest.
+
+        Must only issue read-only control-plane requests. Platforms without
+        such an API report no digest and no properties.
+
+        Args:
+            function: The deployed function
+
+        Returns:
+            ProviderDescription: Provider-reported code digest and function properties
+        """
+        return {"code_digest": None, "properties": {}}
 
     @property
     def system_config(self) -> SeBSConfig:
@@ -519,7 +546,6 @@ class System(ABC, LoggingBase):
                 function=function,
             )
             code_package.query_cache()
-            return function
         else:
             assert function is not None
             self.cached_function(function)
@@ -564,7 +590,9 @@ class System(ABC, LoggingBase):
                 code_package.query_cache()
             else:
                 self.logging.info(f"Code of cached function: {func_name} is up to date.")
-            return function
+
+        self._used_functions[function.name] = (code_package, function)
+        return function
 
     @abstractmethod
     def update_function_configuration(self, cached_function: Function, benchmark: Benchmark):

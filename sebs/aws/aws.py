@@ -8,6 +8,7 @@ including code packaging, function creation, trigger management, and
 metrics collection.
 """
 
+import base64
 import math
 import os
 import shutil
@@ -27,6 +28,7 @@ from sebs.aws.config import AWSConfig
 from sebs.faas.config import Resources
 from sebs.utils import execute
 from sebs.benchmark import Benchmark
+from sebs.manifest import Digest, ProviderDescription
 from sebs.cache import Cache
 from sebs.config import SeBSConfig
 from sebs.experiments.config import SystemVariant
@@ -446,6 +448,47 @@ class AWS(System):
         lambda_function.add_trigger(trigger)
 
         return lambda_function
+
+    def describe_function(self, function: Function) -> ProviderDescription:
+        """Read Lambda's view of the deployed function.
+
+        Drops account-specific values: the presigned code URL, ARNs, and the
+        image registry. Layers are reduced to `name:version`.
+
+        Args:
+            function: The deployed function
+
+        Returns:
+            ProviderDescription: Code digest of zip packages, and runtime,
+                architecture, memory, and related properties
+        """
+        ret = self.client.get_function(FunctionName=function.name)
+        conf = ret["Configuration"]
+        keys = [
+            "Runtime",
+            "Architectures",
+            "MemorySize",
+            "Timeout",
+            "PackageType",
+            "CodeSize",
+            "LastModified",
+            "Version",
+            "Handler",
+        ]
+        properties = {key: conf[key] for key in keys if key in conf}
+        properties["Layers"] = [
+            ":".join(layer["Arn"].split(":")[-2:]) for layer in conf.get("Layers", [])
+        ]
+        resolved_image = ret.get("Code", {}).get("ResolvedImageUri")
+        if resolved_image:
+            properties["ResolvedImageDigest"] = resolved_image.split("@")[-1]
+        # Lambda reports base64; the manifest compares hex digests.
+        code_digest: Optional[Digest] = (
+            {"sha256": base64.b64decode(conf["CodeSha256"]).hex()}
+            if conf.get("PackageType") == "Zip"
+            else None
+        )
+        return {"code_digest": code_digest, "properties": properties}
 
     def cached_function(self, function: Function) -> None:
         """Set up triggers for a cached function.
