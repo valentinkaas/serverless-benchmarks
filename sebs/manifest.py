@@ -16,6 +16,10 @@ Build provenance is collected when a code package is built and stored in the
 cache next to the package, so that runs reusing a cached package report the
 same provenance. The manifest itself is assembled from end-of-run state.
 
+Function-side environment records are not part of the manifest: wrappers
+return them in each invocation's `environment` field, so they are stored
+with the invocation results.
+
 The TypedDicts below are the schema; bump SCHEMA_VERSION on incompatible changes.
 """
 
