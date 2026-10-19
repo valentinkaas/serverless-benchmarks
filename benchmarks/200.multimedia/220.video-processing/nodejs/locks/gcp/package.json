@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@google-cloud/datastore": "9.1.0",
+    "@google-cloud/storage": "4.0.0",
+    "uuid": "3.4.0"
+  }
+}

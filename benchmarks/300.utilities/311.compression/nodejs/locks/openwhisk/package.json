@@ -1,0 +1,11 @@
+{
+  "name": "compression-benchmark",
+  "version": "1.0.0",
+  "description": "Compression benchmark for serverless platforms",
+  "dependencies": {
+    "uuid": "^10.0.0",
+    "archiver": "^7.0.0",
+    "aws-sdk": "2.1692.0",
+    "minio": "7.0.16"
+  }
+}

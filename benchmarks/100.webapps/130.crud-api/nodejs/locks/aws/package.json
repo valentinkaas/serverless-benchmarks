@@ -1,0 +1,10 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "CRUD API benchmark",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "uuid": "3.4.0"
+  }
+}

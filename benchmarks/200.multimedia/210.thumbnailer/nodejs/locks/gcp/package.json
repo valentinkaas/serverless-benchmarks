@@ -1,0 +1,13 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "sharp": "^0.33",
+    "@google-cloud/datastore": "9.1.0",
+    "@google-cloud/storage": "4.0.0",
+    "uuid": "3.4.0"
+  }
+}
